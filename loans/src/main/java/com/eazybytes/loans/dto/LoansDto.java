@@ -8,7 +8,7 @@ public class LoansDto {
     private String mobileNumber;
     private String loanNumber;
     private String loanType;
-    private Long totalLoan;
-    private Long amountPaid;
-    private Long outstandingAmount;
+    private int totalLoan;
+    private int amountPaid;
+    private int outstandingAmount;
 }
