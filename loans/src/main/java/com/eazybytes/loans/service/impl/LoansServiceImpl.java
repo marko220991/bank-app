@@ -1,8 +1,10 @@
 package com.eazybytes.loans.service.impl;
 
 import com.eazybytes.loans.constants.LoansConstants;
+import com.eazybytes.loans.dto.LoansDto;
 import com.eazybytes.loans.entity.Loans;
 import com.eazybytes.loans.exception.LoanAlreadyExistsException;
+import com.eazybytes.loans.exception.ResourceNotFoundException;
 import com.eazybytes.loans.repository.LoansRepository;
 import com.eazybytes.loans.service.ILoansService;
 import lombok.AllArgsConstructor;
@@ -44,5 +46,21 @@ public class LoansServiceImpl implements ILoansService {
         newLoan.setCreatedAt(LocalDateTime.now());
         newLoan.setCreatedBy("Anonymous");
         return newLoan;
+    }
+
+    @Override
+    public LoansDto fetchLoan(String mobileNumber) {
+        Loans loan = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Loan", "mobileNumber", mobileNumber)
+        );
+        LoansDto loanDto = new LoansDto();
+        loanDto.setMobileNumber(loan.getMobileNumber());
+        loanDto.setLoanNumber(loan.getLoanNumber());
+        loanDto.setLoanType(loan.getLoanType());
+        loanDto.setTotalLoan(loan.getTotalLoan());
+        loanDto.setAmountPaid(loan.getAmountPaid());
+        loanDto.setOutstandingAmount(loan.getOutstandingAmount());
+
+        return loanDto;
     }
 }
