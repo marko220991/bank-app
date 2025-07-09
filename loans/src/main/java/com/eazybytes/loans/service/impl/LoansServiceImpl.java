@@ -5,6 +5,7 @@ import com.eazybytes.loans.dto.LoansDto;
 import com.eazybytes.loans.entity.Loans;
 import com.eazybytes.loans.exception.LoanAlreadyExistsException;
 import com.eazybytes.loans.exception.ResourceNotFoundException;
+import com.eazybytes.loans.mapper.LoansMapper;
 import com.eazybytes.loans.repository.LoansRepository;
 import com.eazybytes.loans.service.ILoansService;
 import lombok.AllArgsConstructor;
@@ -62,5 +63,19 @@ public class LoansServiceImpl implements ILoansService {
         loanDto.setOutstandingAmount(loan.getOutstandingAmount());
 
         return loanDto;
+    }
+
+    @Override
+    public boolean updateLoan(LoansDto loansDto) {
+        boolean isUpdated = false;
+        Loans loan = loansRepository.findByMobileNumber(loansDto.getMobileNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Loan", "mobileNumber", loansDto.getMobileNumber())
+        );
+
+        LoansMapper.mapToLoans(loansDto, loan);
+        loansRepository.save(loan);
+        isUpdated = true;
+
+        return isUpdated;
     }
 }
