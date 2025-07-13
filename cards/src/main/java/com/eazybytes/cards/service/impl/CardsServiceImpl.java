@@ -11,7 +11,6 @@ import com.eazybytes.cards.service.ICardsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -44,8 +43,6 @@ public class CardsServiceImpl implements ICardsService {
         newCard.setTotalLimit(CardsConstants.NEW_CARD_LIMIT);
         newCard.setAmountUsed(0);
         newCard.setAvailableAmount(CardsConstants.NEW_CARD_LIMIT);
-        newCard.setCreatedAt(LocalDateTime.now());
-        newCard.setCreatedBy("Anonymous");
         return newCard;
     }
 
