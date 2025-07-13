@@ -4,6 +4,10 @@ import com.eazybytes.cards.constants.CardsConstants;
 import com.eazybytes.cards.dto.CardsDto;
 import com.eazybytes.cards.dto.ResponseDto;
 import com.eazybytes.cards.service.ICardsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -13,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(
+        name = "CRUD REST APIs for Cards in Bank",
+        description = "CRUD REST APIs in Bank to CREATE, READ, UPDATE and DELETE Cards details"
+)
 @RestController
 @AllArgsConstructor
 @Validated
@@ -21,6 +29,14 @@ public class CardsController {
 
     private ICardsService iCardsService;
 
+    @Operation(
+            summary = "Create Card REST API",
+            description = "REST API in Bank to CREATE Card details"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status CREATED"
+    )
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(@RequestParam
                                       @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
@@ -31,6 +47,14 @@ public class CardsController {
                 .body(new ResponseDto(CardsConstants.STATUS_201, CardsConstants.MESSAGE_201));
     }
 
+    @Operation(
+            summary = "Fetch Card REST API",
+            description = "REST API in Bank to FETCH Card details"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status OK"
+    )
     @GetMapping("/fetch")
     public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
@@ -41,6 +65,25 @@ public class CardsController {
 
     }
 
+    @Operation(
+            summary = "Update Card REST API",
+            description = "REST API in Bank to UPDATE Card details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+        }
+    )
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateCardDetails(@Valid @RequestBody CardsDto cardsDto) {
         boolean isUpdated = iCardsService.updateCard(cardsDto);
@@ -55,6 +98,25 @@ public class CardsController {
         }
     }
 
+    @Operation(
+            summary = "Delete Card REST API",
+            description = "REST API in Bank to DELETE Card details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "417",
+                    description = "Expectation Failed"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error"
+            )
+        }
+    )
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteCardDetails(@RequestParam
                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
